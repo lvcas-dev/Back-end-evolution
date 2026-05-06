@@ -1,0 +1,262 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.roadmap { padding: 1.5rem 0; max-width: 680px; }
+.phase { margin-bottom: 1.5rem; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; }
+.phase-header { display: flex; align-items: center; gap: 12px; padding: 14px 20px; cursor: pointer; user-select: none; background: var(--color-background-secondary); border-bottom: 0.5px solid var(--color-border-tertiary); }
+.phase-header:hover { background: var(--color-background-tertiary); }
+.phase-badge { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 99px; white-space: nowrap; }
+.p1 .phase-badge { background: #EEEDFE; color: #3C3489; }
+.p2 .phase-badge { background: #E1F5EE; color: #085041; }
+.p3 .phase-badge { background: #FAEEDA; color: #633806; }
+.p4 .phase-badge { background: #E6F1FB; color: #0C447C; }
+.pno .phase-badge { background: #FCEBEB; color: #791F1F; }
+@media (prefers-color-scheme: dark) {
+  .p1 .phase-badge { background: #3C3489; color: #CECBF6; }
+  .p2 .phase-badge { background: #085041; color: #9FE1CB; }
+  .p3 .phase-badge { background: #633806; color: #FAC775; }
+  .p4 .phase-badge { background: #0C447C; color: #B5D4F4; }
+  .pno .phase-badge { background: #791F1F; color: #F7C1C1; }
+}
+.phase-title { font-size: 15px; font-weight: 500; color: var(--color-text-primary); flex: 1; }
+.phase-meta { font-size: 12px; color: var(--color-text-secondary); white-space: nowrap; }
+.chevron { font-size: 12px; color: var(--color-text-tertiary); transition: transform 0.2s; }
+.phase-body { padding: 20px; display: none; }
+.phase-body.open { display: block; }
+.slabel { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); margin-bottom: 8px; margin-top: 16px; }
+.slabel:first-child { margin-top: 0; }
+.tgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+.tc { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 12px; }
+.tc .tt { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 2px; }
+.tc .ts { font-size: 12px; color: var(--color-text-secondary); line-height: 1.4; }
+.resources { display: flex; flex-direction: column; gap: 6px; }
+.ri { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--color-text-secondary); }
+.rd { width: 6px; height: 6px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+.milestone { background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 12px 14px; margin-top: 8px; }
+.mt { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+.md { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+.feynman-box { background: var(--color-background-secondary); border-left: 3px solid #7F77DD; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; padding: 10px 14px; margin-top: 10px; font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+.tw { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
+th { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-tertiary); text-align: left; padding: 6px 8px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+td { padding: 8px 8px; border-bottom: 0.5px solid var(--color-border-tertiary); color: var(--color-text-secondary); vertical-align: top; line-height: 1.5; word-break: break-word; }
+td:first-child { color: var(--color-text-primary); font-weight: 500; }
+tr:last-child td { border-bottom: none; }
+.warn-list { display: flex; flex-direction: column; gap: 8px; }
+.warn-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; background: #FCEBEB; border-radius: var(--border-radius-md); border: 0.5px solid #F7C1C1; }
+@media (prefers-color-scheme: dark) { .warn-item { background: #501313; border-color: #791F1F; } }
+.wi { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.wt { font-size: 13px; color: var(--color-text-secondary); line-height: 1.5; }
+.wt strong { color: var(--color-text-primary); font-weight: 500; }
+code { font-family: var(--font-mono); font-size: 12px; background: var(--color-background-tertiary); padding: 1px 5px; border-radius: 4px; }
+</style>
+
+<div class="roadmap">
+
+  <div class="phase p1">
+    <div class="phase-header" onclick="toggle(this)">
+      <span class="phase-badge">Fase 1</span>
+      <span class="phase-title">Alfabetização digital e lógica</span>
+      <span class="phase-meta">~200h · Dificuldade: 7/10</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="phase-body open">
+      <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:14px;">Idêntica para qualquer trilha. Backend não muda a necessidade de entender como a máquina pensa — muda apenas o que você vai construir depois.</p>
+      <div class="slabel">Conteúdo obrigatório</div>
+      <div class="tgrid">
+        <div class="tc"><div class="tt">Como o computador funciona</div><div class="ts">CPU, memória, SO, processos, threads. O que acontece quando você executa um programa.</div></div>
+        <div class="tc"><div class="tt">Lógica de programação</div><div class="ts">Variáveis, tipos, condicionais, loops, funções. Pseudocódigo antes de qualquer sintaxe.</div></div>
+        <div class="tc"><div class="tt">Estruturas de dados</div><div class="ts">Array, lista, pilha, fila, dicionário/mapa. Complexidade O(n) — você precisa saber isso em entrevista.</div></div>
+        <div class="tc"><div class="tt">Algoritmos fundamentais</div><div class="ts">Busca linear e binária, ordenação básica. Recursão com exemplos concretos.</div></div>
+        <div class="tc"><div class="tt">Python como veículo</div><div class="ts">Python é a linguagem de entrada ideal para backend: sintaxe limpa, vasta adoção em APIs e dados.</div></div>
+      </div>
+      <div class="slabel">Distribuição de tempo (regra 20/80)</div>
+      <div class="tw"><table>
+        <thead><tr><th style="width:35%">Atividade</th><th style="width:25%">Horas/semana</th><th>Exemplo concreto</th></tr></thead>
+        <tbody>
+          <tr><td>Leitura/vídeo</td><td>3h</td><td>1 capítulo de livro ou 2 vídeos curtos</td></tr>
+          <tr><td>Código prático</td><td>12h</td><td>Implementar do zero o que aprendeu</td></tr>
+          <tr><td>Técnica Feynman</td><td>1h</td><td>Explicar em papel para um leigo imaginário</td></tr>
+        </tbody>
+      </table></div>
+      <div class="feynman-box"><strong style="color:var(--color-text-primary)">Técnica Feynman:</strong> após estudar recursão ou complexidade, feche tudo e tente explicar em voz alta. Onde você gaguejar é onde ainda não sabe. Volte exatamente para aquele ponto.</div>
+      <div class="slabel">Marco obrigatório — Milestone 1</div>
+      <div class="milestone">
+        <div class="mt">Jogo da forca ou calculadora de RPN no terminal</div>
+        <div class="md">Sem tutorial. Você planeja no papel, lê a documentação, escreve o código. Critério: roda sem erros e você consegue explicar cada linha sem consultar nada.</div>
+      </div>
+      <div class="slabel">Recursos</div>
+      <div class="resources">
+        <div class="ri"><span class="rd" style="background:#7F77DD"></span><span><strong style="color:var(--color-text-primary)">Livro:</strong> "Pense em Python" — gratuito em PT-BR, direto ao ponto</span></div>
+        <div class="ri"><span class="rd" style="background:#7F77DD"></span><span><strong style="color:var(--color-text-primary)">Curso:</strong> CS50 (cs50.harvard.edu) — gratuito, cobre hardware + lógica + algoritmos com rigor</span></div>
+        <div class="ri"><span class="rd" style="background:#7F77DD"></span><span><strong style="color:var(--color-text-primary)">Prática:</strong> HackerRank trilha Python — exercícios progressivos com feedback automático</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase p2">
+    <div class="phase-header" onclick="toggle(this)">
+      <span class="phase-badge">Fase 2</span>
+      <span class="phase-title">Ecossistema de desenvolvimento</span>
+      <span class="phase-meta">~120h · Dificuldade: 5/10</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="phase-body">
+      <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:14px;">Backend vive no terminal. Quem não sabe operar linha de comando com fluência não consegue depurar servidores, gerenciar processos nem fazer deploy.</p>
+      <div class="slabel">Conteúdo obrigatório</div>
+      <div class="tgrid">
+        <div class="tc"><div class="tt">Terminal / Linux</div><div class="ts">Navegação, permissões, pipes, variáveis de ambiente, processos. Aprenda em Linux, não em Windows.</div></div>
+        <div class="tc"><div class="tt">Git e GitHub</div><div class="ts">init, add, commit, push, pull, branch, merge, rebase básico. Resolver conflitos sem GUI.</div></div>
+        <div class="tc"><div class="tt">SQL sólido</div><div class="ts">SELECT, INSERT, UPDATE, DELETE, JOIN (inner/left/right), subqueries, índices, transações. PostgreSQL.</div></div>
+        <div class="tc"><div class="tt">Como ler documentação</div><div class="ts">Estrutura de uma doc oficial. Diferença entre referência de API e guia de uso. Leia docs, não tutoriais.</div></div>
+        <div class="tc"><div class="tt">Redes básicas</div><div class="ts">HTTP, HTTPS, DNS, TCP/IP em nível conceitual. O que acontece quando você acessa uma URL.</div></div>
+      </div>
+      <div class="slabel">Marco obrigatório — Milestone 2</div>
+      <div class="milestone">
+        <div class="mt">Sistema de cadastro no terminal com PostgreSQL</div>
+        <div class="md">Script Python que conecta num banco PostgreSQL local, faz CRUD completo via linha de comando. Histórico versionado no Git com mensagens de commit descritivas. Critério: outro dev clona, lê o README e reproduz tudo sem precisar te perguntar nada.</div>
+      </div>
+      <div class="slabel">Recursos</div>
+      <div class="resources">
+        <div class="ri"><span class="rd" style="background:#1D9E75"></span><span><strong style="color:var(--color-text-primary)">Terminal:</strong> linuxcommand.org — gratuito, cobre o essencial em 2 semanas</span></div>
+        <div class="ri"><span class="rd" style="background:#1D9E75"></span><span><strong style="color:var(--color-text-primary)">Git:</strong> git-scm.com/doc — seção "Pro Git" gratuita e completa</span></div>
+        <div class="ri"><span class="rd" style="background:#1D9E75"></span><span><strong style="color:var(--color-text-primary)">SQL:</strong> postgresql.org/docs — documentação oficial do PostgreSQL</span></div>
+        <div class="ri"><span class="rd" style="background:#1D9E75"></span><span><strong style="color:var(--color-text-primary)">Redes:</strong> "HTTP: The Definitive Guide" caps. 1–4 — base sólida para entender o protocolo que você vai servir</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase p3">
+    <div class="phase-header" onclick="toggle(this)">
+      <span class="phase-badge">Fase 3</span>
+      <span class="phase-title">Especialização — backend com Python</span>
+      <span class="phase-meta">~300h · Dificuldade: 7/10</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="phase-body">
+      <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:14px;">A trilha abaixo é sequencial e não pode ser reordenada. Cada bloco pressupõe o anterior. FastAPI foi escolhido por ser moderno, próximo de como o mercado escreve código em 2025 e com documentação excelente.</p>
+      <div class="slabel">Trilha obrigatória — nesta ordem</div>
+      <div class="tw"><table>
+        <thead><tr><th style="width:28%">Bloco</th><th style="width:38%">Conteúdo</th><th style="width:14%">Horas</th><th>Critério de saída</th></tr></thead>
+        <tbody>
+          <tr><td>Python intermediário</td><td>OOP, herança, exceções, módulos, ambientes virtuais (venv), pip</td><td>~50h</td><td>Modelar um sistema de biblioteca com classes sem consultar tutorial</td></tr>
+          <tr><td>APIs REST</td><td>O que é REST, verbos HTTP, status codes, JSON, autenticação básica (token)</td><td>~40h</td><td>Consumir 3 APIs públicas diferentes via <code>requests</code> e tratar os erros</td></tr>
+          <tr><td>FastAPI</td><td>Rotas, Pydantic, validação, dependências, middleware, docs automáticas</td><td>~60h</td><td>API funcional com pelo menos 5 endpoints sem usar tutorial passo a passo</td></tr>
+          <tr><td>ORM com SQLAlchemy</td><td>Modelos, sessões, migrations com Alembic, relacionamentos</td><td>~50h</td><td>Substituir SQL puro do Milestone 2 por ORM na mesma aplicação</td></tr>
+          <tr><td>Autenticação</td><td>JWT, hashing de senha (bcrypt), OAuth2 básico, proteção de rotas</td><td>~40h</td><td>Sistema de login/logout funcional na sua API</td></tr>
+          <tr><td>Docker</td><td>Dockerfile, docker-compose, variáveis de ambiente, volumes</td><td>~40h</td><td>Sua aplicação rodando em container com banco separado via compose</td></tr>
+          <tr><td>Testes automatizados</td><td>pytest, fixtures, mocks, cobertura básica, TDD introdutório</td><td>~40h</td><td>Suite de testes para os endpoints da sua API com ao menos 70% de cobertura</td></tr>
+        </tbody>
+      </table></div>
+      <div class="feynman-box"><strong style="color:var(--color-text-primary)">Regra de ouro:</strong> se você não consegue explicar a diferença entre autenticação e autorização, o que um status 401 significa versus um 403, e por que JWT não é criptografia — você não terminou esta fase.</div>
+      <div class="slabel">Marco obrigatório — Milestone 3</div>
+      <div class="milestone">
+        <div class="mt">API REST completa com autenticação e Docker</div>
+        <div class="md">Escolha um domínio (biblioteca, estoque, tarefas, finanças pessoais). Implemente CRUD completo, autenticação JWT, validação com Pydantic, testes com pytest e deploy via docker-compose. Critério: URL pública rodando (Railway ou Render, ambos gratuitos), código no GitHub com README explicando as decisões de arquitetura — não apenas como instalar.</div>
+      </div>
+      <div class="slabel">Recursos</div>
+      <div class="resources">
+        <div class="ri"><span class="rd" style="background:#BA7517"></span><span><strong style="color:var(--color-text-primary)">FastAPI:</strong> fastapi.tiangolo.com — documentação exemplar, leia antes de assistir qualquer vídeo</span></div>
+        <div class="ri"><span class="rd" style="background:#BA7517"></span><span><strong style="color:var(--color-text-primary)">SQLAlchemy:</strong> docs.sqlalchemy.org — referência oficial, seção ORM tutorial</span></div>
+        <div class="ri"><span class="rd" style="background:#BA7517"></span><span><strong style="color:var(--color-text-primary)">Docker:</strong> docs.docker.com/get-started — guia oficial, os primeiros 4 módulos cobrem o necessário</span></div>
+        <div class="ri"><span class="rd" style="background:#BA7517"></span><span><strong style="color:var(--color-text-primary)">Pytest:</strong> docs.pytest.org — documentação oficial com exemplos práticos</span></div>
+        <div class="ri"><span class="rd" style="background:#BA7517"></span><span><strong style="color:var(--color-text-primary)">Deploy:</strong> railway.app ou render.com — gratuitos para projetos pessoais, deploy em minutos</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase p4">
+    <div class="phase-header" onclick="toggle(this)">
+      <span class="phase-badge">Fase 4</span>
+      <span class="phase-title">Portfólio e habilidades técnicas profissionais</span>
+      <span class="phase-meta">~100h · Dificuldade: 4/10 técnico, 8/10 disciplina</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="phase-body">
+      <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:14px;">A diferença entre um candidato que passa na triagem técnica e um que não passa raramente é conhecimento — é capacidade de depurar ao vivo e explicar o que fez.</p>
+      <div class="slabel">Habilidades de depuração</div>
+      <div class="tgrid">
+        <div class="tc"><div class="tt">Leitura de logs</div><div class="ts">Stack traces Python, logs de servidor, identificar a linha exata do erro antes de buscar no Google.</div></div>
+        <div class="tc"><div class="tt">Depurador (pdb/debugpy)</div><div class="ts">Breakpoints, inspecionar variáveis em runtime, step over/into. Não apenas print().</div></div>
+        <div class="tc"><div class="tt">Diagnóstico de API</div><div class="ts">Postman ou curl para isolar se o problema é no cliente ou no servidor. Headers, body, status codes.</div></div>
+        <div class="tc"><div class="tt">Problemas de banco</div><div class="ts">EXPLAIN em queries lentas, índices faltando, deadlocks. Saber identificar N+1 queries.</div></div>
+      </div>
+      <div class="slabel">O que recrutadores técnicos olham no portfólio backend</div>
+      <div class="tw"><table>
+        <thead><tr><th style="width:30%">Elemento</th><th style="width:35%">O que importa</th><th>O que não importa</th></tr></thead>
+        <tbody>
+          <tr><td>GitHub</td><td>Commits frequentes, mensagens descritivas, histórico que mostra evolução</td><td>Repositórios vazios ou só com clone de tutorial</td></tr>
+          <tr><td>Projetos</td><td>2-3 projetos sólidos com deploy que você explica cada decisão</td><td>10 projetos copiados sem entender</td></tr>
+          <tr><td>README</td><td>Decisões de arquitetura, como rodar localmente, variáveis de ambiente necessárias</td><td>"Projeto feito para aprender"</td></tr>
+          <tr><td>Testes</td><td>Suite de testes rodando, mesmo que pequena</td><td>Projeto sem nenhum teste automatizado</td></tr>
+          <tr><td>Deploy</td><td>URL pública funcionando com banco real</td><td>Prints de tela do terminal local</td></tr>
+        </tbody>
+      </table></div>
+      <div class="slabel">Marco obrigatório — Milestone 4 (portfólio mínimo viável)</div>
+      <div class="milestone">
+        <div class="mt">3 projetos deployed + apresentação técnica gravada</div>
+        <div class="md">Milestone 2 refatorado com ORM e Git. Milestone 3 (API completa). Mais 1 projeto novo integrando um serviço externo real (envio de e-mail, pagamento sandbox, armazenamento de arquivos). Critério de saída: você grava um vídeo de 5 minutos explicando as decisões técnicas de cada projeto — banco escolhido, estrutura de autenticação, por que usou cada biblioteca. Se travar na explicação, não está pronto para entrevista técnica.</div>
+      </div>
+      <div class="slabel">Recursos</div>
+      <div class="resources">
+        <div class="ri"><span class="rd" style="background:#185FA5"></span><span><strong style="color:var(--color-text-primary)">Depuração:</strong> "Rubber Duck Debugging" — explique o problema em voz alta passo a passo antes de pedir ajuda a alguém</span></div>
+        <div class="ri"><span class="rd" style="background:#185FA5"></span><span><strong style="color:var(--color-text-primary)">README:</strong> github.com/readme — guia oficial com exemplos de bons READMEs</span></div>
+        <div class="ri"><span class="rd" style="background:#185FA5"></span><span><strong style="color:var(--color-text-primary)">SQL performance:</strong> use-the-index-luke.com — guia gratuito sobre índices e otimização de queries</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase pno">
+    <div class="phase-header" onclick="toggle(this)">
+      <span class="phase-badge">Armadilhas</span>
+      <span class="phase-title">O que NÃO fazer — específico para backend</span>
+      <span class="phase-meta">Leia antes de começar</span>
+      <span class="chevron">▶</span>
+    </div>
+    <div class="phase-body">
+      <div class="warn-list">
+        <div class="warn-item"><span class="wi">✕</span><div class="wt"><strong>Aprender Django antes de entender HTTP:</strong> Django abstrai demais para quem não sabe o que está por baixo. Você vai seguir tutoriais sem entender o que o framework está fazendo por você. FastAPI expõe mais o mecanismo.</div></div>
+        <div class="warn-item"><span class="wi">✕</span><div class="wt"><strong>Pular Docker achando que é avançado:</strong> todo processo seletivo de estágio backend em 2025 vai perguntar sobre containers. Não é avançado — é o mínimo esperado.</div></div>
+        <div class="warn-item"><span class="wi">✕</span><div class="wt"><strong>Usar ORM sem ter aprendido SQL puro primeiro:</strong> quando o ORM gerar uma query lenta (e vai gerar), você não vai saber diagnosticar se não souber SQL. A ordem importa.</div></div>
+        <div class="warn-item"><span class="wi">✕</span><div class="wt"><strong>Guardar senha em texto puro "só para testar":</strong> hábitos ruins de segurança aparecem nos projetos do portfólio. Recrutador técnico vai olhar seu código.</div></div>
+        <div class="warn-item"><span class="wi">✕</span><div class="wt"><strong>Fazer deploy sem variáveis de ambiente:</strong> chave de API ou senha de banco no código commitado é eliminatório em qualquer empresa séria.</div></div>
+        <div class="warn-item"><span class="wi">✕</span><div class="wt"><strong>Não escrever nenhum teste:</strong> "vou adicionar testes depois" é sinônimo de nunca. Escreva testes enquanto desenvolve, mesmo que básicos.</div></div>
+        <div class="warn-item"><span class="wi">✕</span><div class="wt"><strong>Aprender Node.js/Go/Rust antes de dominar Python:</strong> a linguagem importa menos do que os conceitos. Domine uma stack completamente antes de diversificar.</div></div>
+        <div class="warn-item"><span class="wi">✕</span><div class="wt"><strong>Ignorar mensagens de erro:</strong> todo erro tem uma causa raiz legível. Quem copia o erro direto no Google sem ler o stack trace não está aprendendo a depurar.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:1.5rem;padding:16px 20px;background:var(--color-background-secondary);border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary)">
+    <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;color:var(--color-text-tertiary);margin-bottom:12px">Carga horária total estimada</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px">
+      <div style="text-align:center;padding:10px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md)">
+        <div style="font-size:20px;font-weight:500;color:var(--color-text-primary)">~720h</div>
+        <div style="font-size:12px;color:var(--color-text-secondary);margin-top:2px">total</div>
+      </div>
+      <div style="text-align:center;padding:10px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md)">
+        <div style="font-size:20px;font-weight:500;color:var(--color-text-primary)">~13m</div>
+        <div style="font-size:12px;color:var(--color-text-secondary);margin-top:2px">15h/semana</div>
+      </div>
+      <div style="text-align:center;padding:10px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md)">
+        <div style="font-size:20px;font-weight:500;color:var(--color-text-primary)">~9m</div>
+        <div style="font-size:12px;color:var(--color-text-secondary);margin-top:2px">20h/semana</div>
+      </div>
+      <div style="text-align:center;padding:10px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md)">
+        <div style="font-size:20px;font-weight:500;color:var(--color-text-primary)">4 marcos</div>
+        <div style="font-size:12px;color:var(--color-text-secondary);margin-top:2px">projetos entregues</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggle(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.chevron');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.textContent = isOpen ? '▶' : '▼';
+}
+</script>

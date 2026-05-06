@@ -1,0 +1,322 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.tracker { padding: 1.5rem 0; }
+.phase-block { margin-bottom: 1.5rem; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; }
+.phase-head { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--color-background-secondary); border-bottom: 0.5px solid var(--color-border-tertiary); cursor: pointer; user-select: none; }
+.phase-head:hover { background: var(--color-background-tertiary); }
+.ph-label { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 99px; white-space: nowrap; }
+.f1 .ph-label { background:#EEEDFE; color:#3C3489; }
+.f2 .ph-label { background:#E1F5EE; color:#085041; }
+.f3 .ph-label { background:#FAEEDA; color:#633806; }
+.f4 .ph-label { background:#E6F1FB; color:#0C447C; }
+@media (prefers-color-scheme: dark) {
+  .f1 .ph-label { background:#3C3489; color:#CECBF6; }
+  .f2 .ph-label { background:#085041; color:#9FE1CB; }
+  .f3 .ph-label { background:#633806; color:#FAC775; }
+  .f4 .ph-label { background:#0C447C; color:#B5D4F4; }
+}
+.ph-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); flex: 1; }
+.ph-pct { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); min-width: 36px; text-align: right; }
+.progress-bar-wrap { height: 4px; background: var(--color-border-tertiary); }
+.progress-bar { height: 4px; transition: width 0.3s; }
+.f1 .progress-bar { background: #7F77DD; }
+.f2 .progress-bar { background: #1D9E75; }
+.f3 .progress-bar { background: #BA7517; }
+.f4 .progress-bar { background: #378ADD; }
+.phase-body { padding: 16px; display: none; }
+.phase-body.open { display: block; }
+.slabel { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); margin-bottom: 8px; margin-top: 14px; }
+.slabel:first-child { margin-top: 0; }
+.check-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid var(--color-border-tertiary); cursor: pointer; }
+.check-item:last-child { border-bottom: none; }
+.check-item:hover .ci-text { color: var(--color-text-primary); }
+.checkbox { width: 16px; height: 16px; border: 1.5px solid var(--color-border-secondary); border-radius: 4px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.check-item.done .checkbox { border-color: transparent; }
+.f1 .check-item.done .checkbox { background: #7F77DD; }
+.f2 .check-item.done .checkbox { background: #1D9E75; }
+.f3 .check-item.done .checkbox { background: #BA7517; }
+.f4 .check-item.done .checkbox { background: #378ADD; }
+.checkmark { width: 8px; height: 5px; border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff; transform: rotate(-45deg) translateY(-1px); display: none; }
+.check-item.done .checkmark { display: block; }
+.ci-text { font-size: 13px; color: var(--color-text-secondary); line-height: 1.5; flex: 1; }
+.check-item.done .ci-text { color: var(--color-text-tertiary); text-decoration: line-through; text-decoration-color: var(--color-border-secondary); }
+.milestone-check { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px 14px; margin-top: 4px; }
+.mc-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; }
+.mc-criteria { display: flex; flex-direction: column; gap: 4px; }
+.summary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+.stat-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px; text-align: center; }
+.stat-val { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+.stat-label { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; }
+.feynman-badge { display: inline-block; font-size: 11px; font-weight: 500; background: #EEEDFE; color: #3C3489; padding: 2px 7px; border-radius: 99px; margin-left: 6px; vertical-align: middle; }
+@media (prefers-color-scheme: dark) { .feynman-badge { background: #3C3489; color: #CECBF6; } }
+.chevron { font-size: 11px; color: var(--color-text-tertiary); }
+.reset-btn { font-size: 12px; color: var(--color-text-tertiary); background: none; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 4px 10px; cursor: pointer; margin-top: 1rem; }
+.reset-btn:hover { color: var(--color-text-secondary); border-color: var(--color-border-secondary); }
+</style>
+
+<div class="tracker">
+  <h2 class="sr-only">Tracker de progresso — roadmap backend</h2>
+
+  <div class="summary-grid" id="summary">
+    <div class="stat-card"><div class="stat-val" id="s-done">0</div><div class="stat-label">itens concluídos</div></div>
+    <div class="stat-card"><div class="stat-val" id="s-total">0</div><div class="stat-label">total de itens</div></div>
+    <div class="stat-card"><div class="stat-val" id="s-pct">0%</div><div class="stat-label">progresso geral</div></div>
+    <div class="stat-card"><div class="stat-val" id="s-phase">F1</div><div class="stat-label">fase atual</div></div>
+  </div>
+
+  <div id="phases-container"></div>
+
+  <button class="reset-btn" onclick="resetAll()">Reiniciar progresso</button>
+</div>
+
+<script>
+const PHASES = [
+  {
+    id: 'f1', label: 'Fase 1', title: 'Lógica e fundamentos',
+    sections: [
+      { label: 'Conceitos — marque ao passar na Técnica Feynman', items: [
+        'Como o computador funciona: CPU, RAM, SO, processos',
+        'Variáveis, tipos de dados e operadores',
+        'Condicionais (if/elif/else)',
+        'Loops (for, while) e controle de fluxo',
+        'Funções: parâmetros, retorno, escopo',
+        'Recursão com pelo menos 2 exemplos funcionando',
+        'Estruturas de dados: list, dict, set, tuple',
+        'Complexidade O(n) — sabe explicar sem fórmula',
+        'Busca linear e binária implementadas do zero',
+        'Ordenação básica (bubble sort) implementada do zero',
+      ]},
+      { label: 'Milestone 1 — critérios obrigatórios', items: [
+        'Programa rodando sem erros',
+        'Escrito sem seguir tutorial passo a passo',
+        'Você explica cada linha sem consultar nada',
+        'Código no GitHub com commit descritivo',
+      ]},
+    ]
+  },
+  {
+    id: 'f2', label: 'Fase 2', title: 'Ecossistema de dev',
+    sections: [
+      { label: 'Terminal e Git', items: [
+        'Navegar diretórios, criar/mover/deletar arquivos via CLI',
+        'Permissões de arquivo (chmod) e variáveis de ambiente',
+        'Pipes e redirecionamento (|, >, >>)',
+        'Git: init, add, commit, push, pull sem GUI',
+        'Git: branch, merge e resolução de conflito manual',
+        'Sabe escrever mensagem de commit descritiva',
+      ]},
+      { label: 'SQL e Redes', items: [
+        'SELECT com WHERE, ORDER BY, LIMIT',
+        'JOIN (INNER, LEFT, RIGHT) com tabelas reais',
+        'GROUP BY, HAVING e funções de agregação',
+        'INSERT, UPDATE, DELETE com transações',
+        'O que acontece quando você acessa uma URL (DNS, TCP, HTTP)',
+        'Diferença entre HTTP e HTTPS',
+        'Status codes: 200, 201, 400, 401, 403, 404, 500',
+      ]},
+      { label: 'Milestone 2 — critérios obrigatórios', items: [
+        'Script Python conectando ao PostgreSQL local',
+        'CRUD completo via linha de comando',
+        'README com instruções para reproduzir do zero',
+        'Histórico Git com mensagens descritivas (não apenas "update")',
+      ]},
+    ]
+  },
+  {
+    id: 'f3', label: 'Fase 3', title: 'Backend com Python',
+    sections: [
+      { label: 'Python intermediário', items: [
+        'Classes, herança, métodos estáticos e de classe',
+        'Exceções customizadas e tratamento correto',
+        'Context managers (with)',
+        'Ambientes virtuais (venv) e gerenciamento com pip',
+        'Módulos e pacotes: __init__.py, imports relativos',
+      ]},
+      { label: 'APIs REST e FastAPI', items: [
+        'Sabe explicar o que é REST sem recitar definição decorada',
+        'Rotas GET, POST, PUT, PATCH, DELETE no FastAPI',
+        'Validação de dados com Pydantic',
+        'Dependências (Depends) e middleware',
+        'Documentação automática (/docs) — sabe usar e explicar',
+        'Tratamento de erros com HTTPException',
+      ]},
+      { label: 'Banco de dados e ORM', items: [
+        'Modelos SQLAlchemy com relacionamentos (1:N, N:N)',
+        'Sessões e gerenciamento de transações',
+        'Migrations com Alembic (criar, aplicar, reverter)',
+        'Sabe identificar e corrigir um N+1 query problem',
+      ]},
+      { label: 'Autenticação e segurança', items: [
+        'Hashing de senha com bcrypt — nunca texto puro',
+        'JWT: geração, validação, expiração',
+        'OAuth2 com password flow no FastAPI',
+        'Proteção de rotas com dependência de autenticação',
+        'Variáveis de ambiente para segredos — nenhum segredo no código',
+      ]},
+      { label: 'Docker e testes', items: [
+        'Dockerfile para a aplicação Python',
+        'docker-compose com app + banco separados',
+        'Variáveis de ambiente via .env no compose',
+        'pytest: fixtures, mocks de banco, testes de endpoint',
+        'Cobertura de testes acima de 70%',
+      ]},
+      { label: 'Milestone 3 — critérios obrigatórios', items: [
+        'API com CRUD completo deployada em URL pública',
+        'Autenticação JWT funcionando',
+        'Testes automatizados rodando no CI ou localmente',
+        'docker-compose sobe tudo com um comando',
+        'README explica decisões de arquitetura, não apenas instalação',
+        'Zero segredos commitados no repositório',
+      ]},
+    ]
+  },
+  {
+    id: 'f4', label: 'Fase 4', title: 'Portfólio e depuração',
+    sections: [
+      { label: 'Habilidades de depuração', items: [
+        'Lê stack trace Python e identifica a linha exata do erro',
+        'Usa pdb ou debugpy (breakpoints reais, não apenas print)',
+        'Usa curl ou Postman para isolar problema de API',
+        'Sabe rodar EXPLAIN em query lenta no PostgreSQL',
+        'Consegue explicar a causa raiz de um erro 500',
+      ]},
+      { label: 'Portfólio — checklist de qualidade', items: [
+        '3 projetos com URL pública funcionando',
+        'Cada projeto tem README com decisões técnicas documentadas',
+        'Commits frequentes com mensagens descritivas em todos os repos',
+        'Pelo menos 1 projeto com serviço externo integrado (e-mail, pagamento sandbox, etc.)',
+        'Nenhum projeto tem segredos no código',
+        'Todos os projetos têm pelo menos testes básicos',
+      ]},
+      { label: 'Milestone 4 — critério final de saída', items: [
+        'Gravou vídeo de 5 min explicando decisões técnicas do Milestone 3',
+        'Consegue responder ao vivo: "Por que você usou JWT e não sessão?"',
+        'Consegue responder ao vivo: "O que é um índice de banco e quando usar?"',
+        'Consegue responder ao vivo: "O que acontece numa requisição HTTP do início ao fim?"',
+      ]},
+    ]
+  },
+];
+
+const KEY = 'roadmap_backend_v1';
+let state = {};
+
+function load() {
+  try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) { state = {}; }
+}
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+function getItemKey(phaseId, sIdx, iIdx) { return `${phaseId}_${sIdx}_${iIdx}`; }
+
+function countPhase(phase) {
+  let done = 0, total = 0;
+  phase.sections.forEach((s, si) => {
+    s.items.forEach((_, ii) => {
+      total++;
+      if (state[getItemKey(phase.id, si, ii)]) done++;
+    });
+  });
+  return { done, total };
+}
+
+function countAll() {
+  let done = 0, total = 0;
+  PHASES.forEach(p => { const c = countPhase(p); done += c.done; total += c.total; });
+  return { done, total };
+}
+
+function currentPhase() {
+  for (let i = 0; i < PHASES.length; i++) {
+    const { done, total } = countPhase(PHASES[i]);
+    if (done < total) return PHASES[i].label;
+  }
+  return 'Completo';
+}
+
+function updateSummary() {
+  const { done, total } = countAll();
+  document.getElementById('s-done').textContent = done;
+  document.getElementById('s-total').textContent = total;
+  document.getElementById('s-pct').textContent = total ? Math.round(done / total * 100) + '%' : '0%';
+  document.getElementById('s-phase').textContent = currentPhase();
+}
+
+function updatePhaseBar(phase) {
+  const { done, total } = countPhase(phase);
+  const pct = total ? Math.round(done / total * 100) : 0;
+  const bar = document.querySelector(`.${phase.id} .progress-bar`);
+  const pctEl = document.querySelector(`.${phase.id} .ph-pct`);
+  if (bar) bar.style.width = pct + '%';
+  if (pctEl) pctEl.textContent = pct + '%';
+}
+
+function toggleItem(phaseId, sIdx, iIdx, el) {
+  const key = getItemKey(phaseId, sIdx, iIdx);
+  state[key] = !state[key];
+  save();
+  el.classList.toggle('done', state[key]);
+  const phase = PHASES.find(p => p.id === phaseId);
+  updatePhaseBar(phase);
+  updateSummary();
+}
+
+function toggle(header) {
+  const body = header.nextElementSibling.nextElementSibling;
+  const chevron = header.querySelector('.chevron');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.textContent = isOpen ? '▶' : '▼';
+}
+
+function resetAll() {
+  if (!confirm('Reiniciar todo o progresso?')) return;
+  state = {};
+  save();
+  render();
+}
+
+function render() {
+  const container = document.getElementById('phases-container');
+  container.innerHTML = '';
+  PHASES.forEach(phase => {
+    const { done, total } = countPhase(phase);
+    const pct = total ? Math.round(done / total * 100) : 0;
+    const block = document.createElement('div');
+    block.className = `phase-block ${phase.id}`;
+
+    let sectionsHTML = '';
+    phase.sections.forEach((section, si) => {
+      const isLast = si === phase.sections.length - 1;
+      const feynman = section.label.toLowerCase().includes('feynman') || section.label.toLowerCase().includes('conceitos');
+      sectionsHTML += `<div class="slabel">${section.label}${feynman ? '<span class="feynman-badge">Feynman</span>' : ''}</div>`;
+      section.items.forEach((item, ii) => {
+        const key = getItemKey(phase.id, si, ii);
+        const done = state[key] ? 'done' : '';
+        sectionsHTML += `
+          <div class="check-item ${done}" onclick="toggleItem('${phase.id}',${si},${ii},this)">
+            <div class="checkbox"><div class="checkmark"></div></div>
+            <span class="ci-text">${item}</span>
+          </div>`;
+      });
+    });
+
+    block.innerHTML = `
+      <div class="phase-head" onclick="toggle(this)">
+        <span class="ph-label">${phase.label}</span>
+        <span class="ph-title">${phase.title}</span>
+        <span class="ph-pct">${pct}%</span>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
+      <div class="phase-body">${sectionsHTML}</div>`;
+    container.appendChild(block);
+  });
+  updateSummary();
+}
+
+load();
+render();
+</script>
